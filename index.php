@@ -26,7 +26,6 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])
      && isset($_POST['dataVencimento']) 
     && isset($_POST['responsavel']))     {
-
     $title = trim($_POST['title']);
     $responsavel = trim($_POST['responsavel']);
     $dataVencimento = trim($_POST['dataVencimento']);
@@ -38,15 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])
     }elseif(empty($responsavel)){
         $error = "O responsavel não pode estar vazio!";
     }
-    elseif(empty($dataVencimento)){
-        $error = "A data de vencimento não pode estar vazia!";
-    }
+    $dataObj = DateTime::createFromFormat('Y-m-d', $dataVencimento);
+    if (!$dataObj) {
+    $error = "Data inválida!";
+}
      else {
-        $stmt = $pdo->prepare("INSERT INTO tasks (title, descricao,responsavel,dataVencimento)
-         VALUES (:title,:descricao,:responsavel, : dataVencimento )");
+        $stmt = $pdo->prepare("INSERT INTO tasks (title, descricao, responsavel, dataVencimento)
+         VALUES (:title, :descricao, :responsavel, :dataVencimento )");
         $stmt->bindValue(':title', $title); //previnir sqlinjection
         $stmt->bindValue(':descricao', $descricao);
-        $stmt->bindValue(':responsavel', $responsvel);
+        $stmt->bindValue(':responsavel', $responsavel);
         $stmt->bindValue(':dataVencimento', $dataVencimento);
         $stmt->execute();
         
@@ -58,13 +58,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])
 
 // Concluir ou excluir tarefa
 //DELETE
-if (isset($_GET['action']) && isset($_GET['id'])) {
+if (isset($_GET['action'])
+     && isset($_GET['id'])) {
     $id = (int) $_GET['id'];
+   
     
     if ($_GET['action'] === 'complete') {
-        $pdo->exec("UPDATE tasks SET done = 1 WHERE id = $id");
+       $stmt- $pdo->prepare("UPDATE tasks SET done = 1 WHERE id = $id");
+       $stmt -> execute([$id]);
     } elseif ($_GET['action'] === 'delete') {
-        $pdo->exec("DELETE FROM tasks WHERE id = $id");
+       $stmt- $pdo->prepare("DELETE FROM tasks WHERE id = $id");
+       $stmt -> execute([$id]);
     }
     
     header("Location: index.php");
