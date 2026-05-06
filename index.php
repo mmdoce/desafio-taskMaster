@@ -19,6 +19,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS tasks (
 )");
 
 // 2. LÓGICA DE NEGÓCIO E CONTROLE DE REQUISIÇÕES MISTURADOS
+//
 $error = '';
 
 // Criar nova tarefa
