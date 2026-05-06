@@ -11,6 +11,7 @@ spl_autoload_register(function ($class) {
     }
 });
 
+//
 // 1. Conexão com o banco (Único lugar no sistema inteiro!)
 $pdo = new PDO('sqlite:' . __DIR__ . '/tasks.sqlite');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
