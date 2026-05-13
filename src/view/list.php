@@ -112,80 +112,36 @@
 <body>
 
 <div class="container">
-    <h1>Task Master (Spaghetti Edition)</h1>
-
-    <?php if ($error): ?>
-        <div class="error"><?php echo htmlspecialchars($error); ?></div>
+    <h1>Task Master (MVC Edition)</h1>
+   
+    <?php if (isset($error)): ?>
+        <div class="error"><?php echo $error; ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="index.php">
-
-        <div class="field">
-            <label for="title">Título *</label>
-            <input type="text" id="title" name="title"
-                   placeholder="O que precisa ser feito?" autocomplete="off">
-        </div>
-
-        <!-- NOVO CAMPO: descrição -->
-        <div class="field">
-            <label for="descricao">Descrição</label>
-            <textarea id="descricao" name="descricao"
-                      placeholder="Detalhes sobre a tarefa (opcional)"></textarea>
-        </div>
-
-        <!-- NOVO CAMPO: responsável -->
-        <div class="field">
-            <label for="responsavel">Responsável *</label>
-            <input type="text" id="responsavel" name="responsavel"
-                   placeholder="Nome de quem vai executar">
-        </div>
-
-        <!-- NOVO CAMPO: data de vencimento -->
-        <div class="field">
-            <label for="dataVencimento">Data de vencimento *</label>
-            <input type="date" id="dataVencimento" name="dataVencimento">
-        </div>
-
-        <button type="submit">Adicionar tarefa</button>
+    <!-- O formulário agora aponta para a action 'create' -->
+    <form method="POST" action="index.php?action=create" class="form-group">
+        <input type="text" name="title" placeholder="Título" required>
+        <input type="text" name="description" placeholder="Descrição">
+        <input type="date" name="due_date" required>
+        <button type="submit">Adicionar</button>
     </form>
 
     <ul>
         <?php foreach ($tasks as $task): ?>
             <li class="<?php echo $task['done'] ? 'done' : ''; ?>">
-
-                <div class="task-info">
-                    <!-- Título -->
-                    <div class="task-title">
-                        <?php echo htmlspecialchars($task['title']); ?>
-                    </div>
-
-                    <!-- Descrição (só exibe se tiver algo) -->
-                    <?php if (!empty($task['descricao'])): ?>
-                        <div class="task-desc">
-                            <?php echo htmlspecialchars($task['descricao']); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Responsável e data -->
-                    <div class="task-meta">
-                        <span>👤 <?php echo htmlspecialchars($task['responsavel']); ?></span>
-                        <span>📅 <?php echo htmlspecialchars($task['dataVencimento']); ?></span>
-                    </div>
+                <div>
+                    <strong><?php echo htmlspecialchars($task['title']); ?></strong><br>
+                    <small><?php echo htmlspecialchars($task['description']); ?> | Vence em: <?php echo $task['due_date']; ?></small>
                 </div>
-
                 <div class="actions">
                     <?php if (!$task['done']): ?>
-                        <a href="?action=complete&id=<?php echo $task['id']; ?>"
-                           title="Concluir">✅</a>
+                        <a href="index.php?action=complete&id=<?php echo $task['id']; ?>">✅</a>
                     <?php endif; ?>
-                    <a href="?action=delete&id=<?php echo $task['id']; ?>"
-                       onclick="return confirm('Tem certeza que deseja excluir esta tarefa?');"
-                       title="Excluir">❌</a>
+                    <a href="index.php?action=delete&id=<?php echo $task['id']; ?>">❌</a>
                 </div>
             </li>
         <?php endforeach; ?>
     </ul>
 </div>
-
 </body>
 </html>
